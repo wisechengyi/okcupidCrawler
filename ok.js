@@ -4,11 +4,26 @@
 
 
 
+process.argv.forEach(function (val, index, array) {
+    console.log(index + ': ' + val);
+});
+
+if (process.argv.length<5){
+    console.log("fault")
+    return
+}
+
+var username = process.argv[2]
+var password = process.argv[3]
+var input  = process.argv[4]
+var output  = process.argv[5]
+
+
 
 
 
 var fs = require("fs");
-var filename = "./710.txt";
+var filename = input
 var fd = fs.openSync(filename, 'r');
 var bufferSize = 1024;
 var buffer = new Buffer(bufferSize);
@@ -38,42 +53,43 @@ var all_data = []
 var OKCupid = require('okcupidjs')
 
 var okc = new OKCupid()
-okc.login("grabbieteam@gmail.com", "xuyuan",function(err, res, body){
+okc.login(username,password,function(err, res, body){
 
     console.log(body)
 
-//
- var timer = setInterval(function () {
-        if (count == usernames.length){
-            clearInterval(timer)
+
+var timer = setInterval(function () {
+    if (count == usernames.length) {
+        clearInterval(timer)
 //            console.log(all_data)
-            var outputFilename = './my.json';
+        var outputFilename = output;
 
-            fs.writeFile(outputFilename, JSON.stringify(all_data, null, 4), function(err) {
-                if(err) {
-                    console.log(err);
-                } else {
-                    console.log("JSON saved to " + outputFilename);
-                }
-            });
-        }
+        fs.writeFile(outputFilename, JSON.stringify(all_data, null, 4), function (err) {
+            if (err) {
+                console.log(err);
+            } else {
+                console.log("JSON saved to " + outputFilename);
+            }
+        });
+    }
 
-     var sn = usernames[count]
-     count++
+    var sn = usernames[count]
+    count++
 
-     okc.getUserProfile(sn, function (err, res, body) {
+    okc.getUserProfile(sn, function (err, res, body) {
 //            console.log(err)
-            if(res.statusCode == 200){
-                console.log(body.age)
-                all_data.push(body)
-            }
-            else{
-                all_data.push(null)
-                console.log("not found")
+//        console.log(count, ": ")
+        if (res.statusCode == 200) {
+            console.log(count+": "+body.age)
+            all_data.push(body)
+        }
+        else {
+            all_data.push(null)
+            console.log(count+": "+"not found")
 
-            }
+        }
 //            console.log(body)
-        })
-    }, 2000);
+    })
+}, 2000);
 
 })
