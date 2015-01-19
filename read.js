@@ -1,7 +1,7 @@
 /**
  * Created by yicheng3 on 1/18/15.
  */
-var profiles = require("./my.json");
+var profiles = require("./results/ny.json");
 
 console.log(profiles.length)
 
